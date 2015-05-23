@@ -10,6 +10,9 @@ public class Cube implements IRenderable {
         gl.glPushMatrix();
 
         gl.glScaled(0.5, 0.5, 0.5);
+
+        gl.glColor3f(1.0f, 1.0f, 0.0f);
+        // Page 27 ppt 06
         gl.glBegin(GL.GL_QUADS);
         {
             // 1
