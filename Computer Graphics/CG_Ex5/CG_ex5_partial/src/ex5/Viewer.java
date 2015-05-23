@@ -53,8 +53,23 @@ public class Viewer implements GLEventListener {
 			//		and zoom. You might want to store the rotation matrix in an array for next time.
 			//		Relevant functions: glGetDoublev, glMultMatrixd
 			//      Example: gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
-			
-			
+
+			// Appendix A - page 8
+			// Step 1 – Transform Canvas Coordinates to View Plane
+			double x = (2 * (mouseTo.x - mouseFrom.x)) / m_drawable.getWidth() - 1;
+			double y = 1 - (2 * (mouseTo.y - mouseFrom.y)) / m_drawable.getHeight();
+
+			// Step 2 – Project View Plane Coordinate onto Sphere
+			double z = 2 - x*x - y*y;
+			if (z < 0) z = 0;
+			z = Math.sqrt(z);
+
+
+			// Step 3 – Compute Rotation
+
+			// Step 4 – Rotate Model
+
+
 			//By this point, we should have already changed the point of view, now set these to null
 			//so we don't change it again on the next redraw.
 			mouseFrom = null;
