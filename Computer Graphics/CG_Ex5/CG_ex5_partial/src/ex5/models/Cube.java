@@ -7,20 +7,50 @@ public class Cube implements IRenderable {
 
     @Override
     public void render(GL gl) {
-        int x = 0;
-        int y = -10;
-        int s = 10;
+        //double r = 0.5;
 
         gl.glPushMatrix();
 
-        gl.glTranslated(x, y, 0);
-        gl.glScaled(s, s, 0);
-        gl.glBegin(GL.GL_POLYGON);
+//        gl.glTranslated(x, y, 0);
+        gl.glScaled(0.5, 0.5, 0.5);
+        gl.glBegin(GL.GL_QUADS);
         {
-            gl.glVertex2d(-1, -1);
-            gl.glVertex2d(1, -1);
-            gl.glVertex2d(1, 1);
-            gl.glVertex2d(-1, 1);
+            // 1
+            gl.glVertex3d(1, 1, 1);
+            gl.glVertex3d(1, 1, -1);
+            gl.glVertex3d(-1, 1, -1);
+            gl.glVertex3d(-1, 1, 1);
+
+            // 2
+            gl.glVertex3d(-1, 1, 1);
+            gl.glVertex3d(-1, -1, -1);
+            gl.glVertex3d(-1, 1, -1);
+            gl.glVertex3d(-1, -1, 1);
+
+            // 3 - back
+            gl.glVertex3d(-1, -1, -1);
+            gl.glVertex3d(-1, 1, -1);
+            gl.glVertex3d(1, 1, -1);
+            gl.glVertex3d(1, -1, -1);
+
+            // 4 - front
+            gl.glVertex3d(1, 1, 1);
+            gl.glVertex3d(-1, -1, 1);
+            gl.glVertex3d(1, -1, 1);
+            gl.glVertex3d(-1, 1, 1);
+
+
+            // 5
+            gl.glVertex3d(1, -1, -1);
+            gl.glVertex3d(-1, -1, -1);
+            gl.glVertex3d(-1, -1, 1);
+            gl.glVertex3d(1, -1, 1);
+
+            // 6
+            gl.glVertex3d(1, 1, 1);
+            gl.glVertex3d(1, -1, -1);
+            gl.glVertex3d(1, 1, -1);
+            gl.glVertex3d(1, -1, 1);
         }
         gl.glEnd();
         gl.glPopMatrix();
