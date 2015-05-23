@@ -16,13 +16,14 @@ import java.awt.event.WindowEvent;
 import javax.media.opengl.GLJPanel;
 import javax.swing.JFrame;
 
+import ex5.models.Cube;
 import ex5.models.Empty;
 import ex5.models.IRenderable;
 
 
 public class App {
 	
-	static IRenderable[] models = {new Empty()}; //TODO: Set additional models here
+	static IRenderable[] models = {new Cube(),new Empty()}; //TODO: Set additional models here
 	static Point prevMouse;
 	static int currentModel;
 	static Frame frame;
