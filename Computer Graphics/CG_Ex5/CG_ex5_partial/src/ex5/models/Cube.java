@@ -7,11 +7,8 @@ public class Cube implements IRenderable {
 
     @Override
     public void render(GL gl) {
-        //double r = 0.5;
-
         gl.glPushMatrix();
 
-//        gl.glTranslated(x, y, 0);
         gl.glScaled(0.5, 0.5, 0.5);
         gl.glBegin(GL.GL_QUADS);
         {
