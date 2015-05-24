@@ -16,40 +16,64 @@ public class Cube implements IRenderable {
         gl.glBegin(GL.GL_QUADS);
         {
             // 1
+            gl.glColor3d(0, 0, 0);
             gl.glVertex3d(1, 1, 1);
+            gl.glColor3d(0, 0, 1);
             gl.glVertex3d(1, 1, -1);
+            gl.glColor3d(0, 1, 0);
             gl.glVertex3d(-1, 1, -1);
+            gl.glColor3d(0, 1, 1);
             gl.glVertex3d(-1, 1, 1);
 
             // 2
+            gl.glColor3d(1, 0, 0);
             gl.glVertex3d(-1, 1, 1);
+            gl.glColor3d(1, 0, 1);
             gl.glVertex3d(-1, -1, -1);
+            gl.glColor3d(1, 1, 0);
             gl.glVertex3d(-1, 1, -1);
+            gl.glColor3d(1, 1, 1);
             gl.glVertex3d(-1, -1, 1);
 
             // 3 - back
+            gl.glColor3d(0, 0, 0);
             gl.glVertex3d(-1, -1, -1);
+            gl.glColor3d(0, 1, 1);
             gl.glVertex3d(-1, 1, -1);
+            gl.glColor3d(0.5, 0.7, 0);
             gl.glVertex3d(1, 1, -1);
+            gl.glColor3d(1, 0.5, 0.2);
             gl.glVertex3d(1, -1, -1);
 
             // 4 - front
+            gl.glColor3d(1, 0.5, 0);
             gl.glVertex3d(1, 1, 1);
+            gl.glColor3d(0, 0, 0);
             gl.glVertex3d(-1, -1, 1);
+            gl.glColor3d(0, 0, 1);
             gl.glVertex3d(1, -1, 1);
+            gl.glColor3d(0, 1, 0);
             gl.glVertex3d(-1, 1, 1);
 
 
             // 5
+            gl.glColor3d(0.5, 0.05, 0.1);
             gl.glVertex3d(1, -1, -1);
+            gl.glColor3d(1, 0.5, 0.11);
             gl.glVertex3d(-1, -1, -1);
+            gl.glColor3d(1, 0, 1);
             gl.glVertex3d(-1, -1, 1);
+            gl.glColor3d(0, 1, 1);
             gl.glVertex3d(1, -1, 1);
 
             // 6
+            gl.glColor3d(0, 1, 1);
             gl.glVertex3d(1, 1, 1);
+            gl.glColor3d(0, 0, 1);
             gl.glVertex3d(1, -1, -1);
+            gl.glColor3d(1, 0, 1);
             gl.glVertex3d(1, 1, -1);
+            gl.glColor3d(1, 1, 1);
             gl.glVertex3d(1, -1, 1);
         }
         gl.glEnd();

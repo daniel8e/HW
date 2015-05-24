@@ -6,6 +6,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
+import com.sun.javafx.geom.Vec4d;
 import com.sun.opengl.util.FPSAnimator;
 
 import ex5.models.IRenderable;
@@ -35,7 +36,7 @@ public class Viewer implements GLEventListener {
 			isModelInitialized = true;
 		}
 		//TODO: uncomment the following line to clear the window before drawing
-		//gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 		setupCamera(gl);
 		if (isAxes)
@@ -46,6 +47,8 @@ public class Viewer implements GLEventListener {
 		model.render(gl);
 	}
 
+
+
 	private void setupCamera(GL gl) {
 		if (!isModelCamera) { //Camera is in an absolute location
 			//TODO: place the camera. You should use mouseFrom, mouseTo, canvas width and
@@ -55,22 +58,33 @@ public class Viewer implements GLEventListener {
 			//      Example: gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
 
 			if (mouseFrom != null && mouseTo != null) {
+				double rotationMatrix[];// = new double[16];
+				//gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
+
+				ex3.math.Vec4d trackball =
+						Trackball.trackball(mouseFrom.getX(), mouseFrom.getY(), mouseTo.getX(), mouseTo.getY());
+				rotationMatrix = Trackball.buildRotmatrix(trackball);
+				gl.glMultMatrixd(rotationMatrix, 0);
+
+
+
 				// Appendix A - page 8
-				// Step 1 – Transform Canvas Coordinates to View Plane
-				double x = (2 * (mouseTo.x - mouseFrom.x)) / m_drawable.getWidth() - 1;
-				double y = 1 - (2 * (mouseTo.y - mouseFrom.y)) / m_drawable.getHeight();
+				// Step 1 - Transform Canvas Coordinates to View Plane
+//				double x = (2 * (mouseTo.x - mouseFrom.x)) / m_drawable.getWidth() - 1;
+//				double y = 1 - (2 * (mouseTo.y - mouseFrom.y)) / m_drawable.getHeight();
+//
+//				// Step 2 - Project View Plane Coordinate onto Sphere
+//				double z = 2 - x * x - y * y;
+//				if (z < 0) z = 0;
+//				z = Math.sqrt(z);
 
-				// Step 2 – Project View Plane Coordinate onto Sphere
-				double z = 2 - x * x - y * y;
-				if (z < 0) z = 0;
-				z = Math.sqrt(z);
 
-
-				// Step 3 – Compute Rotation
+				// Step 3 - Compute Rotation
 				//double angle = 0;
 				//gl.glRotated(angle, x?, y?, z?);
 
-				// Step 4 – Rotate Model
+
+				// Step 4 - Rotate Model
 			}
 
 			//By this point, we should have already changed the point of view, now set these to null
