@@ -7,24 +7,20 @@ import ex3.math.Vec4d;
 // https://github.com/sanko/fltk-2.0.x/blob/master/test/trackball.c
 // http://www.csee.umbc.edu/~squire/download/trackball.c
 // Thant Tessman and the August '88 issue of Siggraph's "Computer Graphics," pp. 121-129.
+// Ex.05, Appendix A - page 8
 public class Trackball {
-    private static final double TRACKBALL_SIZE = 0.8;
-
     /*
      * Project an x,y pair onto a sphere of radius r OR a hyperbolic sheet
      * if we are away from the center of the sphere.
      */
-    private static double projectToSphere(double r, double x, double y) {
-        double d, t, z;
+    private static double projectToSphere(double x, double y) {
+        double z;
 
-        d = Math.sqrt(x * x + y * y);
-        if (d < r * 0.70710678118654752440) {    /* Inside sphere */
-            z = Math.sqrt(r * r - d * d);
-        } else {           /* On hyperbola */
-            t = r / 1.41421356237309504880;
-            z = t * t / d;
-        }
-        return z;
+        z = 2 - x *  - y * y;
+
+        if (z < 0) return 0;
+
+        return Math.sqrt(z);
     }
 
     /*
@@ -51,15 +47,15 @@ public class Trackball {
 
         // First, figure out z-coordinates for projection of P1 and P2 to
         // deformed sphere
-        p1 = new Vec(p1x, p1y, projectToSphere(TRACKBALL_SIZE, p1x, p1y));
-        p2 = new Vec(p2x, p2y, projectToSphere(TRACKBALL_SIZE, p2x, p2y));
+        p1 = new Vec(p1x, p1y, projectToSphere(p1x, p1y));
+        p2 = new Vec(p2x, p2y, projectToSphere(p2x, p2y));
 
         // Now, we want the cross product of P1 and P2
-        axis = Vec.crossProd(p2, p1);
+        axis = Vec.crossProd(p1, p2);
 
         // Figure out how much to rotate around that axis.
         d = Vec.sub(p1, p2);
-        t = d.length() / (2.0 * TRACKBALL_SIZE);
+        t = d.length() / (2.0);
 
         // Avoid problems with out-of-control values...
         if (t > 1.0) t = 1.0;

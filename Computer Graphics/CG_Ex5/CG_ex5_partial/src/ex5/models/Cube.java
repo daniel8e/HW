@@ -9,6 +9,8 @@ public class Cube implements IRenderable {
     public void render(GL gl) {
         gl.glPushMatrix();
 
+        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+
         gl.glScaled(0.5, 0.5, 0.5);
 
         gl.glColor3f(1.0f, 1.0f, 0.0f);
@@ -81,8 +83,6 @@ public class Cube implements IRenderable {
             gl.glColor3d(1, 0, 1);
             gl.glVertex3d(-1, -1, 1);
 
-
-
             // 6 - right - clockwise
             gl.glColor3d(0, 1, 1);
             gl.glVertex3d(1, 1, 1);
@@ -92,7 +92,7 @@ public class Cube implements IRenderable {
 
             gl.glColor3d(0, 0, 1);
             gl.glVertex3d(1, -1, -1);
-            
+
             gl.glColor3d(1, 1, 1);
             gl.glVertex3d(1, -1, 1);
         }

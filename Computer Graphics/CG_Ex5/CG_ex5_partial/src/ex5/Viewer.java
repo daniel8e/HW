@@ -58,17 +58,20 @@ public class Viewer implements GLEventListener {
 			//      Example: gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
 
 			if (mouseFrom != null && mouseTo != null) {
-				double rotationMatrix[];// = new double[16];
-				//gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
+				double rotationMatrix[];
 
-				ex3.math.Vec4d trackball =
-						Trackball.trackball(mouseFrom.getX(), mouseFrom.getY(), mouseTo.getX(), mouseTo.getY());
+				// Appendix A - page 8
+				ex3.math.Vec4d trackball = Trackball.trackball(
+						2 * mouseFrom.getX() / m_drawable.getWidth() - 1.0,
+						1.0 - 2 * mouseFrom.getY() / m_drawable.getHeight(),
+						2 * mouseTo.getX() / m_drawable.getWidth() - 1.0,
+						1.0 - 2 * mouseTo.getY() / m_drawable.getHeight());
 				rotationMatrix = Trackball.buildRotmatrix(trackball);
 				gl.glMultMatrixd(rotationMatrix, 0);
 
 
 
-				// Appendix A - page 8
+
 				// Step 1 - Transform Canvas Coordinates to View Plane
 //				double x = (2 * (mouseTo.x - mouseFrom.x)) / m_drawable.getWidth() - 1;
 //				double y = 1 - (2 * (mouseTo.y - mouseFrom.y)) / m_drawable.getHeight();
