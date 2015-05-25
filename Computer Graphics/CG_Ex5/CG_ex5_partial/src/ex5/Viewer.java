@@ -6,7 +6,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
-import com.sun.javafx.geom.Vec4d;
+//import com.sun.javafx.geom.Vec4d;
 import com.sun.opengl.util.FPSAnimator;
 
 import ex5.models.IRenderable;
@@ -27,6 +27,10 @@ public class Viewer implements GLEventListener {
 	private boolean isModelCamera = false; //Whether the camera is relative to the model, rather than the world (ex6)
 	private boolean isModelInitialized = false; //Whether model.init() was called.
 	
+	// remember width and height for canvas
+	private int width;
+	private int height;
+	
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
@@ -42,7 +46,12 @@ public class Viewer implements GLEventListener {
 		if (isAxes)
 			renderAxes(gl);
 		
-		//TODO: set wireframe mode
+		// Wireframes
+		if (isWireframe) {
+			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		} else {
+			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		}
 
 		model.render(gl);
 	}
@@ -112,9 +121,15 @@ public class Viewer implements GLEventListener {
 
 		//TODO: light model, normal normalization, depth test, back face culling, ...
 		
-		//gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
-        //gl.glEnable(GL.GL_CULL_FACE); // Enable back face culling
-
+		// Rec6, slide 35+, and followed the todo line above.
+		gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
+        gl.glEnable(GL.GL_CULL_FACE); // Enable back face culling <- this also makes one of the edges black.
+		gl.glEnable(GL.GL_NORMALIZE); // Normal Normalize
+		gl.glEnable(GL.GL_DEPTH_TEST); // Enable depth test
+		
+		//TODO: Enable light.
+		// is it just gl.glEnable(GL.GL_LIGHTING); ? or we need another matrix ?
+		
 		// Initialize display callback timer
 		ani = new FPSAnimator(30, true);
 		ani.add(drawable);
@@ -126,12 +141,27 @@ public class Viewer implements GLEventListener {
 		else
 			stopAnimation();
 	}
-
+	
+	
+	// Recitation 9, starting at slide 12 and on.
+	// Frustum API: https://www.opengl.org/sdk/docs/man2/xhtml/glFrustum.xml
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		//TODO: Remember the width and height of the canvas for the trackball.
-		//TODO: Apply zoom using the projection matrix
-		//TODO: Set the projection to perspective.
+		GL gl = drawable.getGL();
+		
+		// Save the width and height of this canvas
+		this.width = width;
+		this.height = height;
+
+		// Select The Projection Matrix
+		gl.glMatrixMode(GL.GL_PROJECTION);
+
+		// Reset The Projection Matrix
+		gl.glLoadIdentity();
+		
+		// Set the projection to perspective. (Apply zoom using the projection matrix)
+		// Change near_val to 0.05 or 0.2 to get different views, or any other parameter
+		gl.glFrustum(-0.1, -0.1, -0.1D * height / width, 0.1D * height / width, 0.1D, 1000.0D);
 	}
 
 	/**
