@@ -26,7 +26,14 @@ public class Viewer implements GLEventListener {
 	private GLAutoDrawable m_drawable = null; //We store the drawable OpenGL object to refresh the scene
 	private boolean isModelCamera = false; //Whether the camera is relative to the model, rather than the world (ex6)
 	private boolean isModelInitialized = false; //Whether model.init() was called.
-	
+	double oldRotationMatrix[] =
+			{
+					1,0,0,0,
+					0,1,0,0,
+					0,0,1,0,
+					0,0,0,1
+			};
+
 	// remember width and height for canvas
 	private int width;
 	private int height;
@@ -41,6 +48,7 @@ public class Viewer implements GLEventListener {
 		}
 		//TODO: uncomment the following line to clear the window before drawing
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glMatrixMode(GL.GL_MODELVIEW);
 
 		setupCamera(gl);
 		if (isAxes)
@@ -66,8 +74,9 @@ public class Viewer implements GLEventListener {
 			//		Relevant functions: glGetDoublev, glMultMatrixd
 			//      Example: gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
 
+
 			if (mouseFrom != null && mouseTo != null) {
-				double rotationMatrix[];
+				double[] rotationMatrix;
 
 				// Appendix A - page 8
 				ex3.math.Vec4d trackball = Trackball.trackball(
@@ -76,28 +85,24 @@ public class Viewer implements GLEventListener {
 						2 * mouseTo.getX() / m_drawable.getWidth() - 1.0,
 						1.0 - 2 * mouseTo.getY() / m_drawable.getHeight());
 				rotationMatrix = Trackball.buildRotmatrix(trackball);
+
+				gl.glLoadIdentity();
 				gl.glMultMatrixd(rotationMatrix, 0);
-
-
-
-
-				// Step 1 - Transform Canvas Coordinates to View Plane
-//				double x = (2 * (mouseTo.x - mouseFrom.x)) / m_drawable.getWidth() - 1;
-//				double y = 1 - (2 * (mouseTo.y - mouseFrom.y)) / m_drawable.getHeight();
-//
-//				// Step 2 - Project View Plane Coordinate onto Sphere
-//				double z = 2 - x * x - y * y;
-//				if (z < 0) z = 0;
-//				z = Math.sqrt(z);
-
-
-				// Step 3 - Compute Rotation
-				//double angle = 0;
-				//gl.glRotated(angle, x?, y?, z?);
-
-
-				// Step 4 - Rotate Model
+				gl.glMultMatrixd(oldRotationMatrix, 0);
+				gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, oldRotationMatrix, 0);
 			}
+
+			// No zoom
+			gl.glLoadIdentity();
+
+			// Do the zoom while not rotated
+			gl.glTranslated(0, 0, -zoom);
+
+			// get out of the module
+			gl.glTranslated(0, 0, -3);
+
+			// rotate back
+			gl.glMultMatrixd(oldRotationMatrix, 0);
 
 			//By this point, we should have already changed the point of view, now set these to null
 			//so we don't change it again on the next redraw.
@@ -122,8 +127,8 @@ public class Viewer implements GLEventListener {
 		//TODO: light model, normal normalization, depth test, back face culling, ...
 		
 		// Rec6, slide 35+, and followed the todo line above.
-		gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
-        gl.glEnable(GL.GL_CULL_FACE); // Enable back face culling <- this also makes one of the edges black.
+		//gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
+        //gl.glEnable(GL.GL_CULL_FACE); // Enable back face culling <- this also makes one of the edges black.
 		gl.glEnable(GL.GL_NORMALIZE); // Normal Normalize
 		gl.glEnable(GL.GL_DEPTH_TEST); // Enable depth test
 		
@@ -140,6 +145,8 @@ public class Viewer implements GLEventListener {
 			startAnimation();
 		else
 			stopAnimation();
+
+
 	}
 	
 	
@@ -161,7 +168,7 @@ public class Viewer implements GLEventListener {
 		
 		// Set the projection to perspective. (Apply zoom using the projection matrix)
 		// Change near_val to 0.05 or 0.2 to get different views, or any other parameter
-		gl.glFrustum(-0.1, -0.1, -0.1D * height / width, 0.1D * height / width, 0.1D, 1000.0D);
+		gl.glFrustum(-0.1, 0.1, -0.1D * height / width, 0.1D * height / width, 0.1D, 1000.0D);
 	}
 
 	/**
@@ -191,7 +198,10 @@ public class Viewer implements GLEventListener {
 	 */
 	public void zoom(double s) {
 		if (!isModelCamera) {
-			zoom += s*0.1;
+			zoom += s * 0.1;
+
+			System.out.println(zoom);
+
 			m_drawable.repaint();
 		}
 	}
