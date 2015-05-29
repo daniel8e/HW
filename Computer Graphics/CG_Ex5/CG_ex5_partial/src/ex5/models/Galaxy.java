@@ -10,7 +10,8 @@ public class Galaxy implements IRenderable {
 	
 	private GLU glu;
 	private boolean isLightSpheres = true;
-	
+	private boolean isAxis = true;
+
 	//Consts
 	private float _shrinkConst = 1f; // this will help normalize galaxies size if needed
 	
@@ -62,19 +63,26 @@ public class Galaxy implements IRenderable {
 	private float RADIUS_NEPTUNE = 24.764f;
 	private float RADIUS_PLUTO = 1.195f;
 	
-	// Arbitrary sizes for our exercise
-	private float SIZE_SUN = 6f;
-	private float SIZE_MERCURY = 0.2439f;
-	private float SIZE_VENUS = 0.6051f;
-	private float SIZE_EARTH = 6.731f;
-	private float SIZE_MOON = 1.738f;
-	private float SIZE_MARS = 3.396f;
-	private float SIZE_JUPITER = 7.1492f;
-	private float SIZE_SATURN = 6.0258f;
-	private float SIZE_URANUS = 2.5559f;
-	private float SIZE_NEPTUNE = 2.4764f;
-	private float SIZE_PLUTO = 1.195f;
-	
+	// Arbitrary sizes for our exercise - order by size
+	private float SIZE_SUN = 1f;
+
+	// Significant size jump
+	private float SIZE_JUPITER = 0.43f * SIZE_SUN;
+	private float SIZE_SATURN = 0.4f * SIZE_SUN;
+
+	// Significant size jump
+	private float SIZE_URANUS = 0.33f * SIZE_SUN;
+	private float SIZE_NEPTUNE = 0.3f * SIZE_SUN;
+
+	// Significant size jump
+	private float SIZE_EARTH = 0.1959f * SIZE_SUN;
+	private float SIZE_VENUS = 0.1857f * SIZE_SUN;
+	private float SIZE_MARS = 0.1755f * SIZE_SUN;
+	private float SIZE_MERCURY = 0.1653f * SIZE_SUN;
+	private float SIZE_MOON = 0.154f * SIZE_SUN;
+	private float SIZE_PLUTO = 0.133f * SIZE_SUN;
+
+
 	//Distances from sun
 	private float DISTANCE_MERCURY = 1.5f;
 	private float DISTANCE_VENUS = 3f;
@@ -86,7 +94,9 @@ public class Galaxy implements IRenderable {
 	private float DISTANCE_URANUS = 8.8f;
 	private float DISTANCE_NEPTUNE = 9.8f;
 	private float DISTANCE_PLUTO = 11.2f;
-	
+
+
+
 	// inclination - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/
 //	private float INCLINATION_MERCURY = 7;
 //	private float INCLINATION_VENUS = 3.4f;
@@ -164,14 +174,16 @@ public class Galaxy implements IRenderable {
         glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
 	    
         gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
-	    glu.gluSphere(planet, 1.0D, 16, 16);
+	    glu.gluSphere(planet, radius, 16, 16);
 	    glu.gluDeleteQuadric(planet);
 	    gl.glPopMatrix();
 	    gl.glPopMatrix();
 	}
 
-	void DrawCircle(GL gl, double cx, double cy, double r, double num_segments)
+	// http://slabode.exofire.net/circle_draw.shtml
+	void drawCircle(GL gl, double cx, double cy, double r)
 	{
+		double num_segments = 25 * Math.sqrt(r);
 		double theta = 2 * 3.1415926 / num_segments;
 		double tangetial_factor = Math.tan(theta);//calculate the tangential factor
 
@@ -181,7 +193,10 @@ public class Galaxy implements IRenderable {
 
 		double y = 0;
 
+		gl.glLineWidth(1);
+
 		gl.glBegin(GL.GL_LINE_LOOP);
+		gl.glColor3d(1, 0.2, 0.2);
 		for(int ii = 0; ii < num_segments; ii++) {
 			gl.glVertex2d(x + cx, y + cy);//output vertex
 
@@ -206,10 +221,12 @@ public class Galaxy implements IRenderable {
 	}
 
 	private void renderAxes(GL gl) {
+		if (!isAxis) return;
 		gl.glLineWidth(2);
 		boolean flag = gl.glIsEnabled(GL.GL_LIGHTING);
 		gl.glDisable(GL.GL_LIGHTING);
 		gl.glBegin(GL.GL_LINES);
+
 		gl.glColor3d(1, 0, 0);
 		gl.glVertex3d(0, 0, 0);
 		gl.glVertex3d(2, 0, 0);
@@ -228,27 +245,31 @@ public class Galaxy implements IRenderable {
 	}
 
 	private void planetCreator(GL gl, GLU glu, Texture tex, float radius, float inclination, float distanceFromSun, float shrinkParam)
-	{	
-	    gl.glPushMatrix();
-	    materializer(gl, new float[1], tex);
+	{
+		gl.glPushMatrix();
+		materializer(gl, new float[1], tex);
 		gl.glPushMatrix();
 
-		renderAxes(gl);
 
 	    GLUquadric planet = glu.gluNewQuadric();
         glu.gluQuadricTexture(planet, true);
-        glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
-        glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
-        glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
-        
-	    gl.glRotated(inclination, 0.0D, 0.0D, 1.0D);
+		glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
+		glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
+		glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
+
+		gl.glRotated(inclination, 0.0D, 0.0D, 1.0D);
 	    gl.glRotated(0, 0.0D, 1.0D, 0.0D);
-	    gl.glTranslated(distanceFromSun, 0.0D, 0.0D);
-	    gl.glRotated(0, 0.0D, 1.0D, 0.0D);
-	    
-	    gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
-	    glu.gluSphere(planet, 0.2, 48, 48);
-	    glu.gluDeleteQuadric(planet);
+		gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
+
+		drawCircle(gl, 0, 0, distanceFromSun);
+
+		gl.glTranslated(distanceFromSun, 0.0D, 0.0D);
+		gl.glRotated(0, 0.0D, 1.0D, 0.0D);
+
+		glu.gluSphere(planet, radius, 48, 48);
+		renderAxes(gl);
+
+		glu.gluDeleteQuadric(planet);
 	    
 //	    if (tex.equals(TEX_EARTH))
 //	    {
@@ -259,9 +280,14 @@ public class Galaxy implements IRenderable {
 //	    {
 //	    	giveMeSomeRingsWithThis(gl);
 //	    }
-	    
-	    gl.glPopMatrix();
-	    gl.glPopMatrix();
+
+
+		gl.glPopMatrix();
+		gl.glPopMatrix();
+
+//		gl.glPushMatrix();
+//		gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
+//		gl.glPopMatrix();
 	}
 	
 	private void letThereBeMoon(GL gl)
@@ -338,6 +364,10 @@ public class Galaxy implements IRenderable {
 	            isLightSpheres = !isLightSpheres;
 	            break;
 	        }
+			case IRenderable.TOGGLE_AXES:
+			{
+				if (params != null) isAxis = (boolean)params;
+			}
 	        default:
 	            System.out.println("Control type not supported: " + toString() + ", " + type);
 	    }

@@ -200,9 +200,6 @@ public class Viewer implements GLEventListener {
 	public void zoom(double s) {
 		if (!isModelCamera) {
 			zoom += s * 0.1;
-
-			System.out.println(zoom);
-
 			m_drawable.repaint();
 		}
 	}
@@ -228,6 +225,7 @@ public class Viewer implements GLEventListener {
 	 */
 	public void toggleAxes() {
 		isAxes = !isAxes;
+		model.control(IRenderable.TOGGLE_AXES, isAxes);
 		m_drawable.repaint();
 	}
 	
