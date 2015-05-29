@@ -56,10 +56,10 @@ public class Galaxy implements IRenderable {
 
 	// Significant size jump
 	private float SIZE_JUPITER = 0.43f * SIZE_SUN;
-	private float SIZE_SATURN = 0.4f * SIZE_SUN;
+	private float SIZE_SATURN = 0.38f * SIZE_SUN;
 
 	// Significant size jump
-	private float SIZE_URANUS = 0.33f * SIZE_SUN;
+	private float SIZE_URANUS = 0.31f * SIZE_SUN;
 	private float SIZE_NEPTUNE = 0.3f * SIZE_SUN;
 
 	// Significant size jump

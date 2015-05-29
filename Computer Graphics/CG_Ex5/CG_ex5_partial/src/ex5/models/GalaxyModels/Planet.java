@@ -74,6 +74,8 @@ public class Planet implements IRenderable {
             tex.bind();
         }
 
+
+
         gl.glRotated(inclination, 0.0D, 0.0D, 1.0D);
         gl.glRotated(0, 0.0D, 1.0D, 0.0D);
         gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
@@ -93,6 +95,7 @@ public class Planet implements IRenderable {
 
         glu.gluSphere(planet, radius, 48, 48);
         renderAxes(gl, radius);
+        insertRings(gl);
 
         glu.gluDeleteQuadric(planet);
 
@@ -102,6 +105,10 @@ public class Planet implements IRenderable {
         if (tex != null) {
             tex.disable();
         }
+    }
+
+    protected void insertRings(GL gl) {
+
     }
 
     @Override
