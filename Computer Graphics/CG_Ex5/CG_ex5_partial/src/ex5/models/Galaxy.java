@@ -46,6 +46,10 @@ public class Galaxy implements IRenderable {
 	private Texture TEX_PLUTO;
 	
 	// radiuses - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/
+	// from ex05, Don’t implement the sizes with the true physical proportions (orbit and
+	// plants’ radiuses) the true proportions are hard to visualize, but make sure that what is bigger
+	// and farther, stays that way.
+	// See Arbitrary sizes for our exercise
 	private float RADIUS_SUN = 696.342f;
 	private float RADIUS_MERCURY = 2.439f;
 	private float RADIUS_VENUS = 6.051f;
@@ -84,16 +88,28 @@ public class Galaxy implements IRenderable {
 	private float DISTANCE_PLUTO = 11.2f;
 	
 	// inclination - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/
+//	private float INCLINATION_MERCURY = 7;
+//	private float INCLINATION_VENUS = 3.4f;
+//	private float INCLINATION_EARTH = 0;
+//	private float INCLINATION_MOON = 5.1f;
+//	private float INCLINATION_MARS = 1.9f;
+//	private float INCLINATION_JUPITER = 1.3f;
+//	private float INCLINATION_SATURN = 2.5f;
+//	private float INCLINATION_URANUS = 0.8f;
+//	private float INCLINATION_NEPTUNE = 1.8f;
+//	private float INCLINATION_PLUTO = 17.2f;
+	// inclination = using data from ex.05 instead
 	private float INCLINATION_MERCURY = 7;
-	private float INCLINATION_VENUS = 3.4f;
+	private float INCLINATION_VENUS = 3.39f;
 	private float INCLINATION_EARTH = 0;
 	private float INCLINATION_MOON = 5.1f;
-	private float INCLINATION_MARS = 1.9f;
+	private float INCLINATION_MARS = 1.85f;
 	private float INCLINATION_JUPITER = 1.3f;
-	private float INCLINATION_SATURN = 2.5f;
-	private float INCLINATION_URANUS = 0.8f;
-	private float INCLINATION_NEPTUNE = 1.8f;
+	private float INCLINATION_SATURN = 2.49f;
+	private float INCLINATION_URANUS = 0.77f;
+	private float INCLINATION_NEPTUNE = 1.77f;
 	private float INCLINATION_PLUTO = 17.2f;
+
 	
 	@Override
 	public void render(GL gl) 
@@ -189,12 +205,36 @@ public class Galaxy implements IRenderable {
 		gl.glEnd();
 	}
 
+	private void renderAxes(GL gl) {
+		gl.glLineWidth(2);
+		boolean flag = gl.glIsEnabled(GL.GL_LIGHTING);
+		gl.glDisable(GL.GL_LIGHTING);
+		gl.glBegin(GL.GL_LINES);
+		gl.glColor3d(1, 0, 0);
+		gl.glVertex3d(0, 0, 0);
+		gl.glVertex3d(2, 0, 0);
+
+		gl.glColor3d(0, 1, 0);
+		gl.glVertex3d(0, 0, 0);
+		gl.glVertex3d(0, 2, 0);
+
+		gl.glColor3d(0, 0, 1);
+		gl.glVertex3d(0, 0, 0);
+		gl.glVertex3d(0, 0, 2);
+
+		gl.glEnd();
+		if(flag)
+			gl.glEnable(GL.GL_LIGHTING);
+	}
+
 	private void planetCreator(GL gl, GLU glu, Texture tex, float radius, float inclination, float distanceFromSun, float shrinkParam)
 	{	
 	    gl.glPushMatrix();
 	    materializer(gl, new float[1], tex);
-	    gl.glPushMatrix();
-	    
+		gl.glPushMatrix();
+
+		renderAxes(gl);
+
 	    GLUquadric planet = glu.gluNewQuadric();
         glu.gluQuadricTexture(planet, true);
         glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
