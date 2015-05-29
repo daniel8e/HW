@@ -59,16 +59,16 @@ public class Galaxy implements IRenderable {
 	private float RADIUS_PLUTO = 1.195f;
 	
 	// Arbitrary sizes for our exercise
-	private float SIZE_SUN = 3f;
+	private float SIZE_SUN = 6f;
 	private float SIZE_MERCURY = 0.2439f;
 	private float SIZE_VENUS = 0.6051f;
 	private float SIZE_EARTH = 6.731f;
 	private float SIZE_MOON = 1.738f;
 	private float SIZE_MARS = 3.396f;
-	private float SIZE_JUPITER = 71.492f;
-	private float SIZE_SATURN = 60.258f;
-	private float SIZE_URANUS = 25.559f;
-	private float SIZE_NEPTUNE = 24.764f;
+	private float SIZE_JUPITER = 7.1492f;
+	private float SIZE_SATURN = 6.0258f;
+	private float SIZE_URANUS = 2.5559f;
+	private float SIZE_NEPTUNE = 2.4764f;
 	private float SIZE_PLUTO = 1.195f;
 	
 	//Distances from sun
@@ -175,15 +175,15 @@ public class Galaxy implements IRenderable {
 	    glu.gluSphere(planet, 0.2, 48, 48);
 	    glu.gluDeleteQuadric(planet);
 	    
-	    if (tex.equals(TEX_EARTH))
-	    {
-	    	letThereBeMoon(gl);
-	    }
-	    
-	    if(tex.equals(TEX_SATURN))
-	    {
-	    	giveMeSomeRingsWithThis(gl);
-	    }
+//	    if (tex.equals(TEX_EARTH))
+//	    {
+//	    	letThereBeMoon(gl);
+//	    }
+//	    
+//	    if(tex.equals(TEX_SATURN))
+//	    {
+//	    	giveMeSomeRingsWithThis(gl);
+//	    }
 	    
 	    gl.glPopMatrix();
 	    gl.glPopMatrix();
