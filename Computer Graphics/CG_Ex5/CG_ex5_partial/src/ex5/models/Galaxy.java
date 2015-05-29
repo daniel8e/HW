@@ -17,7 +17,7 @@ public class Galaxy implements IRenderable {
 	private int _slices = 16;
 	private int _stacks = 16;
 	
-	// Texture consts - http://planetpixelemporium.com/
+	// Texture paths, resource folder
 	private String PATH_TEX_SUN;
 	private String PATH_TEX_MERCURY;
 	private String PATH_TEX_VENUS;
@@ -58,6 +58,7 @@ public class Galaxy implements IRenderable {
 	private float RADIUS_NEPTUNE = 24.764f;
 	private float RADIUS_PLUTO = 1.195f;
 	
+	// Arbitrary sizes for our exercise
 	private float SIZE_SUN = 3f;
 	private float SIZE_MERCURY = 0.2439f;
 	private float SIZE_VENUS = 0.6051f;
@@ -73,6 +74,14 @@ public class Galaxy implements IRenderable {
 	//Distances from sun
 	private float DISTANCE_MERCURY = 1.5f;
 	private float DISTANCE_VENUS = 3f;
+	private float DISTANCE_EARTH = 4f;
+	private float DISTANCE_MOON = 1f; // ? should be against sun or proportional to around earth
+	private float DISTANCE_MARS = 5.2f;
+	private float DISTANCE_JUPITER = 6.3f;
+	private float DISTANCE_SATURN = 7.5f;
+	private float DISTANCE_URANUS = 8.8f;
+	private float DISTANCE_NEPTUNE = 9.8f;
+	private float DISTANCE_PLUTO = 11.2f;
 	
 	// inclination - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/
 	private float INCLINATION_MERCURY = 7;
@@ -96,6 +105,16 @@ public class Galaxy implements IRenderable {
 		drawSun(gl, glu, TEX_SUN, SIZE_SUN, shrink);
 		planetCreator(gl, glu, TEX_MERCURY, SIZE_MERCURY, INCLINATION_MERCURY, DISTANCE_MERCURY, shrink);
 		planetCreator(gl, glu, TEX_VENUS, SIZE_VENUS, INCLINATION_VENUS, DISTANCE_VENUS, shrink);
+		planetCreator(gl, glu, TEX_EARTH, SIZE_EARTH, INCLINATION_EARTH, DISTANCE_EARTH, shrink);
+		// moon ?
+		planetCreator(gl, glu, TEX_MARS, SIZE_MARS, INCLINATION_MARS, DISTANCE_MARS, shrink);
+		planetCreator(gl, glu, TEX_JUPITER, SIZE_JUPITER, INCLINATION_JUPITER, DISTANCE_JUPITER, shrink);
+		planetCreator(gl, glu, TEX_SATURN, SIZE_SATURN, INCLINATION_SATURN, DISTANCE_SATURN, shrink);
+		// rings ?
+		planetCreator(gl, glu, TEX_URANUS, SIZE_URANUS, INCLINATION_URANUS, DISTANCE_URANUS, shrink);
+		planetCreator(gl, glu, TEX_NEPTUNE, SIZE_NEPTUNE, INCLINATION_NEPTUNE, DISTANCE_NEPTUNE, shrink);
+		planetCreator(gl, glu, TEX_PLUTO, SIZE_PLUTO, INCLINATION_PLUTO, DISTANCE_PLUTO, shrink);
+		// letThereBeSpecial(gl);
 
 	}
 	
@@ -156,6 +175,16 @@ public class Galaxy implements IRenderable {
 	    glu.gluSphere(planet, 0.2, 48, 48);
 	    glu.gluDeleteQuadric(planet);
 	    
+	    if (tex.equals(TEX_EARTH))
+	    {
+	    	letThereBeMoon(gl);
+	    }
+	    
+	    if(tex.equals(TEX_SATURN))
+	    {
+	    	giveMeSomeRingsWithThis(gl);
+	    }
+	    
 	    gl.glPopMatrix();
 	    gl.glPopMatrix();
 	}
@@ -198,12 +227,16 @@ public class Galaxy implements IRenderable {
 		glu = new GLU();
 		textureInit(TEX_SUN, PATH_TEX_SUN);
 		textureInit(TEX_MERCURY, PATH_TEX_MERCURY);
-//		textureInit(TEX_SUN, PATH_TEX_SUN); stubs for others
-//		textureInit(TEX_SUN, PATH_TEX_SUN);
-//		textureInit(TEX_SUN, PATH_TEX_SUN);
-//		textureInit(TEX_SUN, PATH_TEX_SUN);
-//		textureInit(TEX_SUN, PATH_TEX_SUN);
-//		textureInit(TEX_SUN, PATH_TEX_SUN);
+		textureInit(TEX_VENUS, PATH_TEX_VENUS);
+		textureInit(TEX_EARTH, PATH_TEX_EARTH);
+		textureInit(TEX_MOON, PATH_TEX_MOON);
+		textureInit(TEX_MARS, PATH_TEX_MARS);
+		textureInit(TEX_JUPITER, PATH_TEX_JUPITER);
+		textureInit(TEX_SATURN, PATH_TEX_SATURN);
+		textureInit(TEX_SATURN_RINGS, PATH_TEX_SATURN_RINGS);
+		textureInit(TEX_URANUS, PATH_TEX_URANUS);
+		textureInit(TEX_NEPTUNE, PATH_TEX_NEPTUNE);
+		textureInit(TEX_PLUTO, PATH_TEX_PLUTO);
 	}
 	
 	private void textureInit(Texture tex, String fileName)
