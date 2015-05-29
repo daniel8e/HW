@@ -153,7 +153,42 @@ public class Galaxy implements IRenderable {
 	    gl.glPopMatrix();
 	    gl.glPopMatrix();
 	}
-	
+
+	void DrawCircle(GL gl, double cx, double cy, double r, double num_segments)
+	{
+		double theta = 2 * 3.1415926 / num_segments;
+		double tangetial_factor = Math.tan(theta);//calculate the tangential factor
+
+		double radial_factor = Math.cos(theta);//calculate the radial factor
+
+		double x = r;//we start at angle = 0
+
+		double y = 0;
+
+		gl.glBegin(GL.GL_LINE_LOOP);
+		for(int ii = 0; ii < num_segments; ii++) {
+			gl.glVertex2d(x + cx, y + cy);//output vertex
+
+			//calculate the tangential vector
+			//remember, the radial vector is (x, y)
+			//to get the tangential vector we flip those coordinates and negate one of them
+
+			double tx = -y;
+			double ty = x;
+
+			//add the tangential vector
+
+			x += tx * tangetial_factor;
+			y += ty * tangetial_factor;
+
+			//correct using the radial factor
+
+			x *= radial_factor;
+			y *= radial_factor;
+		}
+		gl.glEnd();
+	}
+
 	private void planetCreator(GL gl, GLU glu, Texture tex, float radius, float inclination, float distanceFromSun, float shrinkParam)
 	{	
 	    gl.glPushMatrix();
