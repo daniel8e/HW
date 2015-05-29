@@ -16,7 +16,6 @@ public class SaturnRings extends Planet {
 
     @Override
     public void render(GL gl) {
-        //super.render(gl);
         gl.glEnable(GL.GL_LIGHTING);
         gl.glPushMatrix();
 
@@ -38,24 +37,15 @@ public class SaturnRings extends Planet {
             tex.bind();
         }
 
+        // on the side so it's look cool :)
         gl.glRotated(inclination, 1.0D, 0.0D, 0.0D);
-//        gl.glRotated(0, 0.0D, 1.0D, 0.0D);
-//        gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
-//
-//        // Move to Saturn
-//        gl.glTranslated(distanceOfSaturnFromTheSun, 0D, 0D);
-//        gl.glRotated(0, 0.0D, 1.0D, 0.0D);
 
+        // creating the rings and the back face of the rings
         glu.gluDisk(planet, size, 0.65, 48, 48);
         gl.glRotated(180.0D, 0.0D, 1.0D, 0.0D);
         glu.gluDisk(planet, size, 0.65, 48, 48);
 
         glu.gluDeleteQuadric(planet);
-
-
-
-
-
 
         if (tex != null) {
             tex.disable();
