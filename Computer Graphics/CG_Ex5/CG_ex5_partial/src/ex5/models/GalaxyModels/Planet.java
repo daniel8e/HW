@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Planet implements IRenderable {
-    private float SIZE_SUN = 1f;
 
     protected Texture tex;
     protected boolean isLightSpheres;
@@ -22,18 +21,16 @@ public class Planet implements IRenderable {
 
     protected GLU glu;
     protected String pathTex;
-    protected float sizeRelativeToTheSun;
+    protected float size;
     protected float inclination;
     protected float distancesFromMainGravity;
 
-    public Planet (GL gl, GLU glu, String pathTex, float sizeRelativeToTheSun, float inclination, float distancesFromMainGravity) {
+    public Planet (GLU glu, String pathTex, float size, float inclination, float distancesFromMainGravity) {
         this.glu = glu;
         this.pathTex = pathTex;
-        this.sizeRelativeToTheSun = sizeRelativeToTheSun;
+        this.size = size;
         this.inclination = inclination;
         this.distancesFromMainGravity = distancesFromMainGravity;
-
-        init(gl);
     }
 
     @Override
@@ -58,7 +55,7 @@ public class Planet implements IRenderable {
 
     protected void planetCreator(GL gl)
     {
-        float radius = sizeRelativeToTheSun;
+        float radius = size;
 
         gl.glPushMatrix();
         materializer(gl, new float[1]);
@@ -81,7 +78,15 @@ public class Planet implements IRenderable {
         gl.glRotated(0, 0.0D, 1.0D, 0.0D);
         gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
 
+        if (tex != null) {
+            tex.disable();
+        }
+
         drawCircle(gl, 0, 0, distancesFromMainGravity);
+
+        if (tex != null) {
+            tex.enable();
+        }
 
         gl.glTranslated(distancesFromMainGravity, 0.0D, 0.0D);
         gl.glRotated(0, 0.0D, 1.0D, 0.0D);
@@ -91,18 +96,12 @@ public class Planet implements IRenderable {
 
         glu.gluDeleteQuadric(planet);
 
-        renderOrbitalObjects(gl, radius, inclination, distancesFromMainGravity);
-
         gl.glPopMatrix();
         gl.glPopMatrix();
 
         if (tex != null) {
             tex.disable();
         }
-    }
-
-    protected void renderOrbitalObjects(GL gl, float radius, float inclination, float distanceFromSun) {
-        // Left empty - this is for inherited
     }
 
     @Override
@@ -181,6 +180,8 @@ public class Planet implements IRenderable {
     // http://slabode.exofire.net/circle_draw.shtml
     protected void drawCircle(GL gl, double cx, double cy, double r)
     {
+        gl.glPushMatrix();
+
         double num_segments = 25 * Math.sqrt(r);
         double theta = 2 * 3.1415926 / num_segments;
         double tangetial_factor = Math.tan(theta);//calculate the tangential factor
@@ -194,7 +195,7 @@ public class Planet implements IRenderable {
         gl.glLineWidth(1);
 
         gl.glBegin(GL.GL_LINE_LOOP);
-        gl.glColor3d(1, 0.2, 0.2);
+        gl.glColor3d(1.0D, 1.0D, 1.0D);
         for(int ii = 0; ii < num_segments; ii++) {
             gl.glVertex2d(x + cx, y + cy);//output vertex
 
@@ -216,6 +217,8 @@ public class Planet implements IRenderable {
             y *= radial_factor;
         }
         gl.glEnd();
+
+        gl.glPopMatrix();
     }
 
     @Override

@@ -180,16 +180,20 @@ public class Galaxy implements IRenderable {
 	public void init(GL gl) {
 		glu = new GLU();
 
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_SUN, 1, 0, 0));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_JUPITER, SIZE_JUPITER, INCLINATION_JUPITER, DISTANCE_JUPITER));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_MARS, SIZE_MARS, INCLINATION_MARS, DISTANCE_MARS));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_MERCURY, SIZE_MERCURY, INCLINATION_MERCURY, DISTANCE_MERCURY));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_NEPTUNE, SIZE_NEPTUNE, INCLINATION_NEPTUNE, DISTANCE_NEPTUNE));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_PLUTO, SIZE_PLUTO, INCLINATION_PLUTO, DISTANCE_PLUTO));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_URANUS, SIZE_URANUS, INCLINATION_URANUS, DISTANCE_URANUS));
-		allPlanets.add(new Planet(gl, glu, PATH_TEX_VENUS, SIZE_VENUS, INCLINATION_VENUS, DISTANCE_VENUS));
-		allPlanets.add(new Saturn(gl, glu, PATH_TEX_SATURN, SIZE_SATURN, INCLINATION_SATURN, DISTANCE_SATURN));
-		allPlanets.add(new Earth(gl, glu, PATH_TEX_EARTH, SIZE_EARTH, INCLINATION_EARTH, DISTANCE_EARTH));
+		allPlanets.add(new Planet(glu, PATH_TEX_SUN, SIZE_SUN, 0, 0));
+		allPlanets.add(new Planet(glu, PATH_TEX_JUPITER, SIZE_JUPITER, INCLINATION_JUPITER, DISTANCE_JUPITER));
+		allPlanets.add(new Planet(glu, PATH_TEX_MARS, SIZE_MARS, INCLINATION_MARS, DISTANCE_MARS));
+		allPlanets.add(new Planet(glu, PATH_TEX_MERCURY, SIZE_MERCURY, INCLINATION_MERCURY, DISTANCE_MERCURY));
+		allPlanets.add(new Planet(glu, PATH_TEX_NEPTUNE, SIZE_NEPTUNE, INCLINATION_NEPTUNE, DISTANCE_NEPTUNE));
+		allPlanets.add(new Planet(glu, PATH_TEX_PLUTO, SIZE_PLUTO, INCLINATION_PLUTO, DISTANCE_PLUTO));
+		allPlanets.add(new Planet(glu, PATH_TEX_URANUS, SIZE_URANUS, INCLINATION_URANUS, DISTANCE_URANUS));
+		allPlanets.add(new Planet(glu, PATH_TEX_VENUS, SIZE_VENUS, INCLINATION_VENUS, DISTANCE_VENUS));
+		allPlanets.add(new Saturn(glu, PATH_TEX_SATURN, SIZE_SATURN, INCLINATION_SATURN, DISTANCE_SATURN));
+		allPlanets.add(new Earth(glu, PATH_TEX_EARTH, SIZE_EARTH, INCLINATION_EARTH, DISTANCE_EARTH));
+
+		for (Planet planet : allPlanets) {
+			planet.init(gl);
+		}
 	}
 
 	@Override

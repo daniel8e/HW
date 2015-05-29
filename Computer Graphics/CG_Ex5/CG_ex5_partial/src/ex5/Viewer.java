@@ -156,7 +156,10 @@ public class Viewer implements GLEventListener {
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL gl = drawable.getGL();
-		
+
+		// Fix the texture once maximizing screen
+		isModelInitialized = false;
+
 		// Save the width and height of this canvas
 		this.width = width;
 		this.height = height;
