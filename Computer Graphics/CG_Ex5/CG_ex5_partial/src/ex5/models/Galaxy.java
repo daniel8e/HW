@@ -17,7 +17,7 @@ public class Galaxy implements IRenderable {
 	private int _slices = 16;
 	private int _stacks = 16;
 	
-	// Texture consts
+	// Texture consts - http://planetpixelemporium.com/
 	private Texture TEX_SUN;
 	private Texture TEX_MERCURY;
 	private Texture TEX_VEVUS;
@@ -81,10 +81,33 @@ public class Galaxy implements IRenderable {
         gl.glPopMatrix();
 	}
 	
-	private void materializer(GL gl)
+	private void LetThereBeStar(GL gl, float radius, float shrinkValue, Texture texture, float[] rgba)
 	{
-		// Set material properties.
+		
+		// texture.enable();
+		// texture.bind();
+		
+		materializer(gl, rgba);
+		
+		GLUquadric planet = glu.gluNewQuadric();
+        glu.gluQuadricTexture(planet, true);
+        glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
+        glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
+        glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
+        glu.gluSphere(planet, radius * shrinkValue, _slices, _stacks);
+        glu.gluDeleteQuadric(planet);
+	}
+	
+	private void materializer(GL gl, float[] nColors)
+	{
 		float[] rgba = {1f, 1f, 1f};
+		
+		// Set material properties.
+		if (nColors != null)
+		{
+			rgba = nColors;
+		}
+
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, rgba, 0);
         gl.glMaterialf(GL.GL_FRONT, GL.GL_SHININESS, 0.5f);
