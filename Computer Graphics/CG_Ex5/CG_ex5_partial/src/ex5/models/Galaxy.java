@@ -29,11 +29,11 @@ public class Galaxy implements IRenderable {
 	private String PATH_TEX_MERCURY = "mercurymap.png";
 	private String PATH_TEX_VENUS = "venusmap.png";
 	private String PATH_TEX_EARTH = "earthmap1k.png";
-	private String PATH_TEX_MOON = null;
+	private String PATH_TEX_MOON = "moon.png";
 	private String PATH_TEX_MARS = "mars_1k_color.png";
 	private String PATH_TEX_JUPITER = "jupitermap.png";
-	private String PATH_TEX_SATURN = null;
-	private String PATH_TEX_SATURN_RINGS = "saturnmap.png";
+	private String PATH_TEX_SATURN = "saturnmap.png";
+	private String PATH_TEX_SATURN_RINGS = "saturnringcolor.png";
 	private String PATH_TEX_URANUS = "uranusmap.png";
 	private String PATH_TEX_NEPTUNE = "neptunemap.png";
 	private String PATH_TEX_PLUTO = "plutomap1k.png";
@@ -170,7 +170,7 @@ public class Galaxy implements IRenderable {
 	private void drawSun(GL gl, GLU glu, Texture tex, float radius, float shrinkParam)
 	{
 		gl.glPushMatrix();
-	    materializer(gl, new float[1], tex);
+		materializer(gl, new float[1], tex);
 	    
 	    gl.glPushMatrix();
 		GLUquadric planet = glu.gluNewQuadric();
@@ -369,6 +369,8 @@ public class Galaxy implements IRenderable {
         catch (IOException ex) {
             ex.printStackTrace();
 			System.out.println(ex.getMessage());
+			System.out.println("Filename: " + fileName);
+			System.out.println("fullpath: " + "res" + File.separator + fileName);
 //            System.exit(1);
         }
 
