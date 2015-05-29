@@ -127,13 +127,15 @@ public class Viewer implements GLEventListener {
 		//TODO: light model, normal normalization, depth test, back face culling, ...
 		
 		// Rec6, slide 35+, and followed the todo line above.
-		//gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
-        //gl.glEnable(GL.GL_CULL_FACE); // Enable back face culling <- this also makes one of the edges black.
+		gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
+        gl.glEnable(GL.GL_CULL_FACE); // Enable back face culling <- this also makes one of the edges black.
 		gl.glEnable(GL.GL_NORMALIZE); // Normal Normalize
 		gl.glEnable(GL.GL_DEPTH_TEST); // Enable depth test
 		
-		//TODO: Enable light.
-		// is it just gl.glEnable(GL.GL_LIGHTING); ? or we need another matrix ?
+		//https://msdn.microsoft.com/en-us/library/windows/desktop/dd373581%28v=vs.85%29.aspx
+		//also possible: GL_LIGHT_MODEL_LOCAL_VIEWER
+		gl.glLightModelf(GL.GL_LIGHT_MODEL_TWO_SIDE, 1);
+		gl.glEnable(GL.GL_LIGHTING);
 		
 		// Initialize display callback timer
 		ani = new FPSAnimator(30, true);
@@ -148,7 +150,6 @@ public class Viewer implements GLEventListener {
 
 
 	}
-	
 	
 	// Recitation 9, starting at slide 12 and on.
 	// Frustum API: https://www.opengl.org/sdk/docs/man2/xhtml/glFrustum.xml

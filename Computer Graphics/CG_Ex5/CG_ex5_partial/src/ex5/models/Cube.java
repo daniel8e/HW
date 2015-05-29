@@ -12,6 +12,8 @@ public class Cube implements IRenderable {
 //        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
 
+        gl.glDisable(GL.GL_LIGHTING);
+        
         gl.glScaled(0.5, 0.5, 0.5);
 
         // Page 27 ppt 06
