@@ -5,6 +5,12 @@ import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
 import com.sun.opengl.util.texture.Texture;
+import com.sun.opengl.util.texture.TextureData;
+import com.sun.opengl.util.texture.TextureIO;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Galaxy implements IRenderable {
 	
@@ -19,18 +25,18 @@ public class Galaxy implements IRenderable {
 	private int _stacks = 16;
 	
 	// Texture paths, resource folder
-	private String PATH_TEX_SUN;
-	private String PATH_TEX_MERCURY;
-	private String PATH_TEX_VENUS;
-	private String PATH_TEX_EARTH;
-	private String PATH_TEX_MOON;
-	private String PATH_TEX_MARS;
-	private String PATH_TEX_JUPITER;
-	private String PATH_TEX_SATURN;
-	private String PATH_TEX_SATURN_RINGS;
-	private String PATH_TEX_URANUS;
-	private String PATH_TEX_NEPTUNE;
-	private String PATH_TEX_PLUTO;
+	private String PATH_TEX_SUN = "sunmap.png";
+	private String PATH_TEX_MERCURY = "mercurymap.png";
+	private String PATH_TEX_VENUS = "venusmap.png";
+	private String PATH_TEX_EARTH = "earthmap1k.png";
+	private String PATH_TEX_MOON = null;
+	private String PATH_TEX_MARS = "mars_1k_color.png";
+	private String PATH_TEX_JUPITER = "jupitermap.png";
+	private String PATH_TEX_SATURN = null;
+	private String PATH_TEX_SATURN_RINGS = "saturnmap.png";
+	private String PATH_TEX_URANUS = "uranusmap.png";
+	private String PATH_TEX_NEPTUNE = "neptunemap.png";
+	private String PATH_TEX_PLUTO = "plutomap1k.png";
 	
 	// Texture consts - http://planetpixelemporium.com/
 	private Texture TEX_SUN;
@@ -167,12 +173,15 @@ public class Galaxy implements IRenderable {
 	    materializer(gl, new float[1], tex);
 	    
 	    gl.glPushMatrix();
-	    GLUquadric planet = glu.gluNewQuadric();
-        glu.gluQuadricTexture(planet, true);
-        glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
-        glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
-        glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
-	    
+		GLUquadric planet = glu.gluNewQuadric();
+		glu.gluQuadricTexture(planet, true);
+		glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
+		glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
+		glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
+		gl.glEnable(GL.GL_TEXTURE_2D);
+
+		if (tex != null) tex.bind();
+
         gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
 	    glu.gluSphere(planet, radius, 16, 16);
 	    glu.gluDeleteQuadric(planet);
@@ -220,24 +229,26 @@ public class Galaxy implements IRenderable {
 		gl.glEnd();
 	}
 
-	private void renderAxes(GL gl) {
+	private void renderAxes(GL gl, double palnetSize) {
 		if (!isAxis) return;
 		gl.glLineWidth(2);
 		boolean flag = gl.glIsEnabled(GL.GL_LIGHTING);
 		gl.glDisable(GL.GL_LIGHTING);
 		gl.glBegin(GL.GL_LINES);
 
+		double radius = 1.5 * palnetSize;
+
 		gl.glColor3d(1, 0, 0);
 		gl.glVertex3d(0, 0, 0);
-		gl.glVertex3d(2, 0, 0);
+		gl.glVertex3d(radius, 0, 0);
 
 		gl.glColor3d(0, 1, 0);
 		gl.glVertex3d(0, 0, 0);
-		gl.glVertex3d(0, 2, 0);
+		gl.glVertex3d(0, radius, 0);
 
 		gl.glColor3d(0, 0, 1);
 		gl.glVertex3d(0, 0, 0);
-		gl.glVertex3d(0, 0, 2);
+		gl.glVertex3d(0, 0, radius);
 
 		gl.glEnd();
 		if(flag)
@@ -252,10 +263,13 @@ public class Galaxy implements IRenderable {
 
 
 	    GLUquadric planet = glu.gluNewQuadric();
-        glu.gluQuadricTexture(planet, true);
+		glu.gluQuadricTexture(planet, true);
 		glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
 		glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
 		glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
+		gl.glEnable(GL.GL_TEXTURE_2D);
+
+		if (tex != null) tex.bind();
 
 		gl.glRotated(inclination, 0.0D, 0.0D, 1.0D);
 	    gl.glRotated(0, 0.0D, 1.0D, 0.0D);
@@ -267,7 +281,7 @@ public class Galaxy implements IRenderable {
 		gl.glRotated(0, 0.0D, 1.0D, 0.0D);
 
 		glu.gluSphere(planet, radius, 48, 48);
-		renderAxes(gl);
+		renderAxes(gl, radius);
 
 		glu.gluDeleteQuadric(planet);
 	    
@@ -326,32 +340,39 @@ public class Galaxy implements IRenderable {
 	@Override
 	public void init(GL gl) {
 		glu = new GLU();
-		textureInit(TEX_SUN, PATH_TEX_SUN);
-		textureInit(TEX_MERCURY, PATH_TEX_MERCURY);
-		textureInit(TEX_VENUS, PATH_TEX_VENUS);
-		textureInit(TEX_EARTH, PATH_TEX_EARTH);
-		textureInit(TEX_MOON, PATH_TEX_MOON);
-		textureInit(TEX_MARS, PATH_TEX_MARS);
-		textureInit(TEX_JUPITER, PATH_TEX_JUPITER);
-		textureInit(TEX_SATURN, PATH_TEX_SATURN);
-		textureInit(TEX_SATURN_RINGS, PATH_TEX_SATURN_RINGS);
-		textureInit(TEX_URANUS, PATH_TEX_URANUS);
-		textureInit(TEX_NEPTUNE, PATH_TEX_NEPTUNE);
-		textureInit(TEX_PLUTO, PATH_TEX_PLUTO);
+
+		TEX_SUN = textureInit(PATH_TEX_SUN);
+		TEX_MERCURY = textureInit(PATH_TEX_MERCURY);
+		TEX_VENUS = textureInit(PATH_TEX_VENUS);
+		TEX_EARTH = textureInit(PATH_TEX_EARTH);
+		TEX_MOON = textureInit(PATH_TEX_MOON);
+		TEX_MARS = textureInit(PATH_TEX_MARS);
+		TEX_JUPITER = textureInit(PATH_TEX_JUPITER);
+		TEX_SATURN = textureInit(PATH_TEX_SATURN);
+		TEX_SATURN_RINGS = textureInit(PATH_TEX_SATURN_RINGS);
+		TEX_URANUS = textureInit(PATH_TEX_URANUS);
+		TEX_NEPTUNE = textureInit(PATH_TEX_NEPTUNE);
+		TEX_PLUTO = textureInit(PATH_TEX_PLUTO);
 	}
 	
-	private void textureInit(Texture tex, String fileName)
+	private Texture textureInit(String fileName)
 	{
+		if (fileName == null) {
+			return null;
+		}
 		// Texture, still crashing on stream is null
-//		try {
-//            InputStream stream = Galaxy.class.getClassLoader().getResourceAsStream(fileName);
-//            TextureData data = TextureIO.newTextureData(stream, false, "png");
-//            tex = TextureIO.newTexture(data);
-//        }
-//        catch (IOException ex) {
-//            ex.printStackTrace();
+		try {
+            InputStream stream = Galaxy.class.getClassLoader().getResourceAsStream("res" + File.separator + fileName);
+            TextureData data = TextureIO.newTextureData(stream, false, "png");
+            return TextureIO.newTexture(data);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+			System.out.println(ex.getMessage());
 //            System.exit(1);
-//        }
+        }
+
+		return null;
 	}
 
 	@Override
