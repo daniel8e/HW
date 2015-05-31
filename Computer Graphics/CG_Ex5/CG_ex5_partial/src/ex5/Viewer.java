@@ -1,3 +1,8 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5;
 
 import java.awt.Point;
@@ -34,11 +39,6 @@ public class Viewer implements GLEventListener {
 					0,0,0,1
 			};
 
-	// remember width and height for canvas
-	private int width;
-	private int height;
-	
-
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
@@ -67,14 +67,8 @@ public class Viewer implements GLEventListener {
 
 
 	private void setupCamera(GL gl) {
-		if (!isModelCamera) { //Camera is in an absolute location
-			//TODO: place the camera. You should use mouseFrom, mouseTo, canvas width and
-			//      height (reshape function), zoom etc. This should actually implement the trackball
-			//		and zoom. You might want to store the rotation matrix in an array for next time.
-			//		Relevant functions: glGetDoublev, glMultMatrixd
-			//      Example: gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, rotationMatrix, 0);
-
-
+		if (!isModelCamera) 
+		{
 			if (mouseFrom != null && mouseTo != null) {
 				double[] rotationMatrix;
 
@@ -123,8 +117,6 @@ public class Viewer implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
 		drawable.setGL(new javax.media.opengl.DebugGL(gl));
-
-		//TODO: light model, normal normalization, depth test, back face culling, ...
 		
 		// Rec6, slide 35+, and followed the todo line above.
 		gl.glCullFace(GL.GL_BACK);    // Set Culling Face To Back Face
@@ -133,7 +125,6 @@ public class Viewer implements GLEventListener {
 		gl.glEnable(GL.GL_DEPTH_TEST); // Enable depth test
 		
 		//https://msdn.microsoft.com/en-us/library/windows/desktop/dd373581%28v=vs.85%29.aspx
-		//also possible: GL_LIGHT_MODEL_LOCAL_VIEWER
 		gl.glLightModelf(GL.GL_LIGHT_MODEL_TWO_SIDE, 1);
 		gl.glEnable(GL.GL_LIGHTING);
 		
@@ -147,8 +138,6 @@ public class Viewer implements GLEventListener {
 			startAnimation();
 		else
 			stopAnimation();
-
-
 	}
 	
 	// Recitation 9, starting at slide 12 and on.
@@ -160,10 +149,6 @@ public class Viewer implements GLEventListener {
 		// Fix the texture once maximizing screen
 		isModelInitialized = false;
 
-		// Save the width and height of this canvas
-		this.width = width;
-		this.height = height;
-
 		// Select The Projection Matrix
 		gl.glMatrixMode(GL.GL_PROJECTION);
 
@@ -171,7 +156,6 @@ public class Viewer implements GLEventListener {
 		gl.glLoadIdentity();
 		
 		// Set the projection to perspective. (Apply zoom using the projection matrix)
-		// Change near_val to 0.05 or 0.2 to get different views, or any other parameter
 		gl.glFrustum(-0.1, 0.1, -0.1D * height / width, 0.1D * height / width, 0.1D, 1000.0D);
 	}
 

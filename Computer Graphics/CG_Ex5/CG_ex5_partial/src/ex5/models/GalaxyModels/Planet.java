@@ -1,3 +1,8 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5.models.GalaxyModels;
 
 import com.sun.opengl.util.texture.Texture;
@@ -133,7 +138,6 @@ public class Planet implements IRenderable {
             System.out.println(ex.getMessage());
             System.out.println("Filename: " + fileName);
             System.out.println("fullpath: " + "res" + File.separator + fileName);
-//            System.exit(1);
         }
 
         return null;
@@ -177,7 +181,7 @@ public class Planet implements IRenderable {
             }
             case IRenderable.TOGGLE_AXES:
             {
-                if (params != null) isAxis = (boolean)params;
+                if (params != null) isAxis = (Boolean)params;
             }
             default:
                 System.out.println("Control type not supported: " + toString() + ", " + type);

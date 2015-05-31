@@ -1,15 +1,17 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5;
 
 import ex3.math.Vec;
 import ex3.math.Vec4d;
 
-// http://web.cse.ohio-state.edu/~hwshen/781/Site/Slides_files/trackball.pdf
-// https://github.com/sanko/fltk-2.0.x/blob/master/test/trackball.c
-// http://www.csee.umbc.edu/~squire/download/trackball.c
-// Thant Tessman and the August '88 issue of Siggraph's "Computer Graphics," pp. 121-129.
 // Ex.05, Appendix A - page 8
 public class Trackball {
-    /*
+   
+	/*
      * Project an x,y pair onto a sphere of radius r OR a hyperbolic sheet
      * if we are away from the center of the sphere.
      */
@@ -23,17 +25,6 @@ public class Trackball {
         return Math.sqrt(z);
     }
 
-    /*
-     * Simulate a track-ball.  Project the points onto the virtual
-     * trackball, then figure out the axis of rotation, which is the cross
-     * product of P1 P2 and O P1 (O is the center of the ball, 0,0,0)
-     * Note:  This is a deformed trackball-- is a trackball in the center,
-     * but is deformed into a hyperbolic sheet of rotation away from the
-     * center.
-     *
-     * It is assumed that the arguments to this routine are in the range
-     * (-1.0 ... 1.0)
-     */
     public static Vec4d trackball(double p1x, double p1y, double p2x, double p2y) {
         Vec axis; /* Axis of rotation */
         double phi;  /* how much to rotate about axis */
@@ -77,10 +68,6 @@ public class Trackball {
         return result;
     }
 
-    /*
-     * Build a rotation matrix, given a quaternion rotation.
-     *
-     */
     public static double[] buildRotmatrix(Vec4d q)
     {
         double m[] = new double[16];

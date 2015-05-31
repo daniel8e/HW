@@ -1,3 +1,8 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5.models.GalaxyModels;
 
 import javax.media.opengl.GL;
@@ -22,8 +27,6 @@ public class SaturnRings extends Planet {
         materializer(gl, new float[1]);
 
         gl.glPushMatrix();
-
-
 
         GLUquadric planet = glu.gluNewQuadric();
         glu.gluQuadricTexture(planet, true);
@@ -50,7 +53,6 @@ public class SaturnRings extends Planet {
         if (tex != null) {
             tex.disable();
         }
-
 
         gl.glPopMatrix();
         gl.glPopMatrix();

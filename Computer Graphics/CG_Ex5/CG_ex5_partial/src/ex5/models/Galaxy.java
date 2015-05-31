@@ -1,3 +1,8 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5.models;
 
 import ex5.models.GalaxyModels.Earth;
@@ -6,20 +11,13 @@ import ex5.models.GalaxyModels.Saturn;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
+
 import java.util.ArrayList;
 
 public class Galaxy implements IRenderable {
 	
-	private GLU glu;
-	private boolean isLightSpheres = true;
-	private ArrayList<Planet> allPlanets = new ArrayList<Planet>();
-
-	//Consts
-	private float _shrinkConst = 1f; // this will help normalize galaxies size if needed
-	private int _slices = 16;
-	private int _stacks = 16;
-
-	// Texture consts - http://planetpixelemporium.com/
+	// Texture Copyrighted - http://planetpixelemporium.com/
 	// Texture paths, resource folder
 	private String PATH_TEX_SUN = "sunmap.png";
 	private String PATH_TEX_MERCURY = "mercurymap.png";
@@ -32,24 +30,10 @@ public class Galaxy implements IRenderable {
 	private String PATH_TEX_NEPTUNE = "neptunemap.png";
 	private String PATH_TEX_PLUTO = "plutomap1k.png";
 	
-
-	
-	// radiuses - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/
-	// from ex05, Don’t implement the sizes with the true physical proportions (orbit and
-	// plants’ radiuses) the true proportions are hard to visualize, but make sure that what is bigger
+	// from ex05, Donï¿½t implement the sizes with the true physical proportions (orbit and
+	// plantsï¿½ radiuses) the true proportions are hard to visualize, but make sure that what is bigger
 	// and farther, stays that way.
 	// See Arbitrary sizes for our exercise
-//	private float RADIUS_SUN = 696.342f;
-//	private float RADIUS_MERCURY = 2.439f;
-//	private float RADIUS_VENUS = 6.051f;
-//	private float RADIUS_EARTH = 6.731f;
-//	private float RADIUS_MOON = 1.738f;
-//	private float RADIUS_MARS = 3.396f;
-//	private float RADIUS_JUPITER = 71.492f;
-//	private float RADIUS_SATURN = 60.258f;
-//	private float RADIUS_URANUS = 25.559f;
-//	private float RADIUS_NEPTUNE = 24.764f;
-//	private float RADIUS_PLUTO = 1.195f;
 	
 	// Arbitrary sizes for our exercise - order by size
 	public static final float SIZE_SUN = 1f;
@@ -69,7 +53,6 @@ public class Galaxy implements IRenderable {
 	private float SIZE_MERCURY = 0.1653f * SIZE_SUN;
 	private float SIZE_PLUTO = 0.133f * SIZE_SUN;
 
-
 	//Distances from sun
 	private float DISTANCE_MERCURY = 1.5f;
 	private float DISTANCE_VENUS = 3f;
@@ -81,19 +64,7 @@ public class Galaxy implements IRenderable {
 	private float DISTANCE_NEPTUNE = 9.8f;
 	private float DISTANCE_PLUTO = 11.2f;
 
-
-
-	// inclination - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/
-//	private float INCLINATION_MERCURY = 7;
-//	private float INCLINATION_VENUS = 3.4f;
-//	private float INCLINATION_EARTH = 0;
-//	private float INCLINATION_MOON = 5.1f;
-//	private float INCLINATION_MARS = 1.9f;
-//	private float INCLINATION_JUPITER = 1.3f;
-//	private float INCLINATION_SATURN = 2.5f;
-//	private float INCLINATION_URANUS = 0.8f;
-//	private float INCLINATION_NEPTUNE = 1.8f;
-//	private float INCLINATION_PLUTO = 17.2f;
+	// inclination - NASA fact sheet - http://nssdc.gsfc.nasa.gov/planetary/factsheet/ (old, but interesting !)
 	// inclination = using data from ex.05 instead
 	private float INCLINATION_MERCURY = 7;
 	private float INCLINATION_VENUS = 3.39f;
@@ -104,76 +75,79 @@ public class Galaxy implements IRenderable {
 	private float INCLINATION_URANUS = 0.77f;
 	private float INCLINATION_NEPTUNE = 1.77f;
 	private float INCLINATION_PLUTO = 17.2f;
-
+	
+	float SHINE_ALL_DIRECTIONS = 1;
+    float[] lightSourceDown = {-4, -10, 0, SHINE_ALL_DIRECTIONS};
+    float[] lightSourceUp = {0, 10, 0, SHINE_ALL_DIRECTIONS};
+    float[] lightSourceSide = {15, 4, 0, SHINE_ALL_DIRECTIONS};
+    float[] colorMatrixWhite = {1f, 1f, 1f, 1f};
+    //float[] colorMatrixRed = {0.9f, 0f, 0f, 0.9f}; - Wont be used as it looks bad, should be used for "cooler" effect
+    
+	private GLU glu;
+	private boolean isLightSpheres = true;
+	private ArrayList<Planet> allPlanets = new ArrayList<Planet>();
 	
 	@Override
 	public void render(GL gl) 
 	{
 		letThereBeLight(gl);
 
-		// what about stars orbits ?
 		for (Planet planet : allPlanets) {
 			planet.render(gl);
 		}
-		// letThereBeSpecial(gl);
+		
+		if (isLightSpheres) 
+		{
+			boolean lightFlag = gl.glIsEnabled(GL.GL_LIGHTING);
+			showLightSpheres(gl);
+		    if (lightFlag)
+		      gl.glEnable(GL.GL_LIGHTING);
+		}
 	}
-
-
-//
-//	private void drawSun(GL gl, GLU glu, Texture tex, float radius, float shrinkParam)
-//	{
-//		gl.glPushMatrix();
-//		materializer(gl, new float[1], tex);
-//
-//	    gl.glPushMatrix();
-//		GLUquadric planet = glu.gluNewQuadric();
-//		glu.gluQuadricTexture(planet, true);
-//		glu.gluQuadricDrawStyle(planet, GLU.GLU_FILL);
-//		glu.gluQuadricNormals(planet, GLU.GLU_FLAT);
-//		glu.gluQuadricOrientation(planet, GLU.GLU_OUTSIDE);
-//		gl.glEnable(GL.GL_TEXTURE_2D);
-//
-//		if (tex != null) tex.bind();
-//
-//        gl.glRotated(-90.0D, 1.0D, 0.0D, 0.0D);
-//	    glu.gluSphere(planet, radius, 16, 16);
-//	    glu.gluDeleteQuadric(planet);
-//	    gl.glPopMatrix();
-//	    gl.glPopMatrix();
-//	}
-//
-
-//	private void letThereBeMoon(GL gl)
-//	{
-//
-//	}
-//
-//	private void giveMeSomeRingsWithThis(GL gl)
-//	{
-//
-//	}
-//
-//	private void letThereBeSpecial(GL gl)
-//	{
-//		//will be used to generate cool other stuff
-//	}
 	
 	private void letThereBeLight(GL gl)
 	{
-		// Prepare light parameters.
-        float SHINE_ALL_DIRECTIONS = 1;
-        float[] lightPos = {-30, 0, 0, SHINE_ALL_DIRECTIONS};
-        float[] lightColorAmbient = {0.2f, 0.2f, 0.2f, 1f};
-        float[] lightColorSpecular = {0.8f, 0.8f, 0.8f, 1f};
-
-        // Set light parameters.
-        // GL_SPECULAR to other ?
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, lightPos, 0);
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColorAmbient, 0);
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, lightColorSpecular, 0);
-
-        // Enable lighting in GL.
+        // Set light parameters & enable each source
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, lightSourceDown, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, colorMatrixWhite, 0);
         gl.glEnable(GL.GL_LIGHT1);
+        
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightSourceUp, 0);
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, colorMatrixWhite, 0);
+        gl.glEnable(GL.GL_LIGHT0);
+        
+        gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, lightSourceSide, 0);
+        gl.glLightfv(GL.GL_LIGHT2, GL.GL_AMBIENT, colorMatrixWhite, 0);
+        gl.glEnable(GL.GL_LIGHT2);
+	}
+	
+	private void showLightSpheres(GL gl)
+	{
+		gl.glDisable(GL.GL_LIGHTING);
+	    gl.glPushMatrix();
+	    
+		GLUquadric lightSphere = glu.gluNewQuadric();
+        glu.gluQuadricDrawStyle(lightSphere, GLU.GLU_FILL);
+        glu.gluQuadricNormals(lightSphere, GLU.GLU_FLAT);
+        glu.gluQuadricOrientation(lightSphere, GLU.GLU_OUTSIDE);
+	
+	    gl.glTranslated(lightSourceDown[0], lightSourceDown[1], lightSourceDown[2]);
+	    gl.glColor4fv(colorMatrixWhite, 0);
+	    glu.gluSphere(lightSphere, 0.3D, 16, 16);
+	    gl.glPopMatrix();
+	    
+	    gl.glPushMatrix();
+	    gl.glTranslated(lightSourceUp[0], lightSourceUp[1], lightSourceUp[2]);
+	    gl.glColor4fv(colorMatrixWhite, 0);
+	    glu.gluSphere(lightSphere, 0.3D, 16, 16);
+	    gl.glPopMatrix();
+	    
+	    gl.glPushMatrix();
+	    gl.glTranslated(lightSourceSide[0], lightSourceSide[1], lightSourceSide[2]);
+	    gl.glColor4fv(colorMatrixWhite, 0);
+	    glu.gluSphere(lightSphere, 0.3D, 16, 16);
+	    gl.glPopMatrix();
+	    glu.gluDeleteQuadric(lightSphere);
 	}
 	
 	@Override
@@ -224,7 +198,6 @@ public class Galaxy implements IRenderable {
 	@Override
 	public void setCamera(GL gl) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

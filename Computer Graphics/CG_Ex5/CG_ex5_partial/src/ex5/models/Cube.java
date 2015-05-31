@@ -1,16 +1,22 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5.models;
 
 import javax.media.opengl.GL;
 
 public class Cube implements IRenderable {
-    private boolean isLightSpheres = true;
+    private boolean isLightSpheres = false;
 
     @Override
     public void render(GL gl) {
         gl.glPushMatrix();
 
-//        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+        gl.glCullFace(GL.GL_FRONT);    // Set Culling Face Front
+        gl.glEnable(GL.GL_CULL_FACE); // Enable culling
+        gl.glPolygonMode(GL.GL_FRONT, GL.GL_FILL);
 
         gl.glDisable(GL.GL_LIGHTING);
         

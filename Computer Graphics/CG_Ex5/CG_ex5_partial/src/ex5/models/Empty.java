@@ -1,3 +1,8 @@
+/*
+ * Exercise 5 - Computer Graphics
+ * Matan Gidnian	200846905
+ * Nitsan Bracha 	300590155
+ */
 package ex5.models;
 
 import javax.media.opengl.GL;
@@ -17,6 +22,8 @@ public class Empty implements IRenderable {
 	@Override
 	public void init(GL gl) {
 		//TODO If you need to initialize any OpenGL parameters, here is the place.
+		gl.glEnable(GL.GL_LIGHTING);
+		gl.glDisable(GL.GL_CULL_FACE);
 	}
 
 	@Override
