@@ -129,7 +129,7 @@ public class Planet implements IRenderable {
         }
         // Texture, still crashing on stream is null
         try {
-            InputStream stream = Galaxy.class.getClassLoader().getResourceAsStream("res" + File.separator + fileName);
+            InputStream stream = Galaxy.class.getResourceAsStream("/res/" + fileName);
             TextureData data = TextureIO.newTextureData(stream, false, "png");
             return TextureIO.newTexture(data);
         }
